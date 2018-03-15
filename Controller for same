@@ -1,0 +1,29 @@
+public class AccOpp {
+ public String acc {get; set;}
+ public list<Account> accconts1 { get; set; }
+    public List<Opportunity> listOpp{get; set; }
+    public Account acc1 {get; set;}
+
+   
+    public AccOpp(ApexPages.StandardController controller){
+          accconts1=new list<Account>();
+          acc1=new Account();
+          acc= controller.getRecord().Id;
+          System.debug('acc'+ acc);
+          acc1 =[select id,name,BillingAddress,Phone,AnnualRevenue,AccountNumber ,BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, OwnerId, Owner.FirstName,(select name,Id,Type,Amount,StageName from Opportunities ) from account where id=:acc];
+          System.debug('accconts1 '+ accconts1.size());
+    }
+    
+    
+   
+    public PageReference deleteOpp(){
+        
+           String myId = System.currentPageReference().getParameters().get('rowId');          
+            Opportunity c = [SELECT Id FROM Opportunity WHERE Id = :myId];
+            delete(c);
+        PageReference p=new PageReference('/apex/CusPage?id='+acc);
+        p.setRedirect(true);
+        return p;
+           
+    }
+}
